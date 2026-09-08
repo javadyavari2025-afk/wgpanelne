@@ -1,13 +1,16 @@
 name: Build and Push Docker Image
+
 on:
   push:
     branches: [ main ]
+
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -25,3 +28,5 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/javadyavari2025-afk/wgpanelne:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
