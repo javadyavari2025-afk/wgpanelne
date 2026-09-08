@@ -1,30 +1,30 @@
+# --- Stage 1: Build the Go binary ---
+FROM golang:1.22-alpine AS builder
+WORKDIR /app
+COPY . .
+RUN go mod download
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o mwp.linux.amd64 .
+
+# --- Stage 2: Final runtime image ---
 FROM alpine:3
 
-## Github Container Registry
-LABEL org.opencontainers.image.source=https://github.com/Maahdima/MWPanel
+LABEL org.opencontainers.image.source=https://github.com/javadyavari2025-afk/wgpanelne
 
-# Installing init software
 RUN set -eux; \
 	apk add --no-cache --virtual .init-program catatonit && \
 	ln -sf /usr/bin/catatonit /sbin/init
 
-# ensure www-data user exists
-# 82 is the standard uid/gid for "www-data" in Alpine
 RUN set -eux && \
 	adduser -u 82 -D -S -s /sbin/nologin -h /var/www/mwp -G www-data www-data && \
 	mkdir -p /var/www/mwp && \
 	chown www-data:www-data /var/www/mwp
 
-# Setting workdir
 WORKDIR /var/www/mwp
 VOLUME /var/www/mwp
 
-# Copy binary file
-ARG TARGETOS
-ARG TARGETARCH
-COPY --chown=root:root ./build/mwp.$TARGETOS.$TARGETARCH /usr/local/sbin/mwp
+# Copy the binary built in stage 1
+COPY --from=builder /app/mwp.linux.amd64 /usr/local/sbin/mwp
 
-# Install binary dependencies
 RUN set -eux; \
     RUNTIME_DEPS=$( \
       scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/sbin/ | \
@@ -34,25 +34,20 @@ RUN set -eux; \
     ) && \
     apk add --no-cache --virtual .runtime-dependencies $(echo $RUNTIME_DEPS | xargs)
 
-# Create the peer files directory
 RUN set -eux; \
 	mkdir -p peer-files && \
     chown www-data:www-data peer-files
 
-# Putting app version inside container just for version tracking
 ARG APP_COMMIT_SHA=unknown
 RUN echo "${APP_COMMIT_SHA}" > /.app_commit_sha
 
-# Setting user and group
 USER www-data:www-data
 
-# Setting runtime environment variables
 ENV MODE=production
 ENV SERVER_HOST=0.0.0.0
 ENV SERVER_PORT=3000
 ENV PEER_FILES_DIR=/var/www/mwp/peer-files
 
-# Expose port 3000 and start server
 EXPOSE 3000
 ENTRYPOINT ["init", "--", "/bin/sh", "-c"]
 CMD ["exec mwp"]
