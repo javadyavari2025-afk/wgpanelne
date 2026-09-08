@@ -23,5 +23,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: ./docker/Dockerfile    # اگر نام فایل داخل پوشه docker چیز دیگری است، آن را وارد کنید
           push: true
           tags: ghcr.io/javadyavari2025-afk/wgpanelne:latest
