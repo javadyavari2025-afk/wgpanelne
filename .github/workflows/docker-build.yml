@@ -28,3 +28,7 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/javadyavari2025-afk/wgpanelne:latest
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
+        env:
+          ACTIONS_RUNNER_DEBUG: true
