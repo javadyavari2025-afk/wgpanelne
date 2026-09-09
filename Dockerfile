@@ -1,7 +1,7 @@
 # --- Stage 1: Build Frontend and Go binary ---
 FROM golang:1.24-alpine AS builder
 
-RUN apk add --no-cache nodejs npm
+RUN apk add --no-cache nodejs npm git
 
 WORKDIR /app
 COPY . .
