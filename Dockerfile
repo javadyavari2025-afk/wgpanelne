@@ -6,26 +6,21 @@ RUN apk add --no-cache nodejs npm
 WORKDIR /app
 COPY . .
 
-# لیست کردن محتویات پوشه برای دیدن ساختار پروژه در لاگ‌ها
-RUN ls -la /app
-
+# Build frontend assets if package.json exists
 WORKDIR /app/ui
 RUN if [ -f "package.json" ]; then npm install && npm run build; fi
 
+# Find main.go automatically anywhere in the repository and build it
 WORKDIR /app
 RUN go mod download
-# جستجوی خودکار و بیلد فایل‌های گو بر اساس پوشه‌های احتمالی
 RUN set -eux; \
-    if [ -d "src" ]; then \
-        CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/mwp.linux.amd64 ./src; \
-    elif [ -d "cmd" ]; then \
-        CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/mwp.linux.amd64 ./cmd; \
-    elif [ -f "main.go" ]; then \
-        CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/mwp.linux.amd64 .; \
-    else \
-        # اگر پوشه خاصی نبود، فایل‌های گو را در زیرپوشه‌ها جستجو کن
-        go build -o /app/mwp.linux.amd64 ./...; \
-    fi
+    MAIN_FILE=$(find . -name "main.go" -print -quit); \
+    if [ -z "$MAIN_FILE" ]; then \
+        echo "Error: main.go not found!"; exit 1; \
+    fi; \
+    MAIN_DIR=$(dirname "$MAIN_FILE"); \
+    echo "Found main.go in: $MAIN_DIR"; \
+    CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/mwp.linux.amd64 "$MAIN_DIR"
 
 # --- Stage 2: Final runtime image ---
 FROM alpine:3
