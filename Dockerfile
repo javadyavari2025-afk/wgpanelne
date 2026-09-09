@@ -6,9 +6,11 @@ RUN apk add --no-cache nodejs npm
 WORKDIR /app
 COPY . .
 
+# Build frontend assets inside the ui directory
 WORKDIR /app/ui
 RUN if [ -f "package.json" ]; then npm install && npm run build; fi
 
+# Switch back explicitly to the root /app directory for Go compilation
 WORKDIR /app
 RUN go mod download
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o mwp.linux.amd64 .
@@ -30,6 +32,7 @@ RUN set -eux && \
 WORKDIR /var/www/mwp
 VOLUME /var/www/mwp
 
+# Copy the binary built in stage 1
 COPY --from=builder /app/mwp.linux.amd64 /usr/local/sbin/mwp
 
 RUN set -eux; \
