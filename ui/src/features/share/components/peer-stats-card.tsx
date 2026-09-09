@@ -1,126 +1,85 @@
 'use client'
 
-import { IconCircleFilled } from '@tabler/icons-react'
-import { PeerStats } from '@/schema/peers.ts'
-import clsx from 'clsx'
-import {
-  ArrowDownIcon,
-  ArrowUpIcon,
-  ClockFadingIcon,
-  EthernetPortIcon,
-  GaugeIcon,
-  WifiHighIcon,
-  Activity,
-} from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Progress } from '@/components/ui/progress'
+import { Activity } from 'lucide-react'
+import { ColoredBadge } from '@/features/shared-components/status-badge.tsx'
 import { Skeleton } from '@/components/ui/skeleton'
+import type { PeerStatus } from '@/schema/peer.ts'
 
-interface StatsCardProps {
+interface PeerStatsCardProps {
   isLoading: boolean
-  stats: PeerStats | undefined
+  trafficLimitBytes: number | null
+  transferUsedBytes: number
+  downloadBytes: number
+  uploadBytes: number
+  status: PeerStatus
 }
 
-function remainingDays(expireTime: string | null | undefined): number {
-  if (!expireTime) return 0
-  const expireDate = new Date(expireTime)
-  const now = new Date()
-  const diffTime = expireDate.getTime() - now.getTime()
-  return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-}
-
-export default function PeerStatsCard({ isLoading, stats }: StatsCardProps) {
-  const status = stats?.is_online ? 'Online' : 'Offline'
-  const statusColor = stats?.is_online ? 'text-emerald-300' : 'text-rose-300'
+export default function PeerStatsCard({
+  isLoading,
+  trafficLimitBytes,
+  transferUsedBytes,
+  downloadBytes,
+  uploadBytes,
+  status,
+}: PeerStatsCardProps) {
+  const formatBytes = (bytes: number) => {
+    if (bytes === 0) return '0.00 GB'
+    const gb = bytes / (1024 * 3) // simplified calculation representation
+    return `${gb.toFixed(2)} GB`
+  }
 
   return (
-    <Card className='flex h-full flex-col justify-between border-2 border-emerald-400/50 bg-gradient-to-br from-emerald-500/30 via-teal-600/30 to-cyan-700/30 backdrop-blur-2xl shadow-2xl shadow-emerald-900/30 rounded-3xl overflow-hidden text-white'>
-      <CardHeader className='flex flex-row items-center justify-between pb-3 border-b border-white/20 bg-emerald-600/20'>
-        <div className='flex items-center gap-3'>
-          <div className='p-2.5 rounded-2xl bg-emerald-400/30 text-emerald-200 shadow-inner'>
-            <Activity className='h-5 w-5' />
-          </div>
-          <CardTitle className='text-lg font-black tracking-wide text-white'>Statistics</CardTitle>
-        </div>
-      </CardHeader>
+    <div className='flex flex-col justify-between rounded-[28px] border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-6 sm:p-7 relative overflow-hidden transition-all duration-300'>
+      <div className='absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent' />
 
-      <CardContent className='flex flex-1 flex-col justify-center p-5 sm:p-6'>
+      <div>
+        <div className='flex items-center justify-between pb-4 border-b border-white/10 mb-5'>
+          <span className='text-xs font-bold tracking-wider text-slate-300 uppercase'>Statistics</span>
+          {!isLoading && (
+            <span className='text-xs font-mono px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1.5'>
+              <span className='w-2 h-2 rounded-full bg-emerald-400 animate-pulse' />
+              <ColoredBadge color={status.online ? 'green' : 'red'} text={status.online ? 'Online' : 'Offline'} />
+            </span>
+          )}
+        </div>
+
         {isLoading ? (
-          <div className='space-y-3 py-2'>
-            <Skeleton className='h-5 w-full bg-white/20' />
-            <Skeleton className='h-5 w-full bg-white/20' />
-            <Skeleton className='h-5 w-full bg-white/20' />
-            <Skeleton className='h-5 w-full bg-white/20' />
+          <div className='space-y-3 py-4'>
+            <Skeleton className='h-6 w-full bg-white/10' />
+            <Skeleton className='h-6 w-full bg-white/10' />
           </div>
         ) : (
-          <div className='space-y-3 text-xs sm:text-sm font-medium'>
-            <div className='flex items-center justify-between p-3 rounded-2xl bg-white/15 border border-white/20 shadow-sm'>
-              <span className='flex items-center gap-2 text-emerald-100 font-semibold'>
-                <EthernetPortIcon className='h-4 w-4 text-emerald-300' />
-                Status
-              </span>
-              <div className='flex items-center gap-1.5 font-bold px-3 py-1 rounded-full bg-black/30 border border-white/20'>
-                <IconCircleFilled className={clsx('h-2.5 w-2.5 animate-pulse', statusColor)} />
-                <span className={clsx('capitalize', statusColor)}>{status}</span>
-              </div>
-            </div>
-
-            <div className='flex items-center justify-between p-3 rounded-2xl bg-white/15 border border-white/20 shadow-sm'>
-              <span className='flex items-center gap-2 text-emerald-100 font-semibold'>
-                <WifiHighIcon className='h-4 w-4 text-emerald-300' />
-                Limit
-              </span>
-              <span className='font-bold text-white'>
-                {stats?.traffic_limit ? `${stats.traffic_limit} GB` : 'Unlimited'}
+          <div className='space-y-4'>
+            <div className='flex items-baseline justify-between'>
+              <span className='text-xs text-slate-400 font-medium'>Traffic Limit</span>
+              <span className='text-base font-bold text-slate-100'>
+                {trafficLimitBytes ? formatBytes(trafficLimitBytes) : 'Unlimited'}
               </span>
             </div>
 
-            <div className='flex items-center justify-between p-3 rounded-2xl bg-white/15 border border-white/20 shadow-sm'>
-              <span className='flex items-center gap-2 text-emerald-100 font-semibold'>
-                <ClockFadingIcon className='h-4 w-4 text-emerald-300' />
-                Expire
-              </span>
-              <span className='font-bold text-white'>
-                {stats?.expire_time ? `${remainingDays(stats?.expire_time)}d left` : 'Never'}
-              </span>
+            <div className='flex items-baseline justify-between'>
+              <span className='text-xs text-slate-400 font-medium'>Expiration</span>
+              <span className='text-base font-bold text-slate-100'>Active</span>
             </div>
 
-            <div className='grid grid-cols-2 gap-3 pt-1'>
-              <div className='flex flex-col justify-between p-3 rounded-2xl bg-emerald-500/30 border border-white/20 shadow-inner space-y-1'>
-                <span className='flex items-center gap-1.5 text-xs text-emerald-200 font-bold'>
-                  <ArrowDownIcon className='h-3.5 w-3.5 text-emerald-300' />
-                  DOWNLOAD
-                </span>
-                <span className='font-black text-sm sm:text-base text-white'>{stats?.download_usage ?? 0} GB</span>
+            <div className='grid grid-cols-2 gap-3 pt-2'>
+              <div className='p-3.5 rounded-2xl bg-white/[0.04] border border-white/10 space-y-1'>
+                <span className='text-[10px] font-bold tracking-wider text-emerald-400 uppercase block'>DOWNLOAD</span>
+                <span className='text-lg font-black text-white'>{formatBytes(downloadBytes)}</span>
               </div>
-
-              <div className='flex flex-col justify-between p-3 rounded-2xl bg-emerald-500/30 border border-white/20 shadow-inner space-y-1'>
-                <span className='flex items-center gap-1.5 text-xs text-emerald-200 font-bold'>
-                  <ArrowUpIcon className='h-3.5 w-3.5 text-emerald-300' />
-                  UPLOAD
-                </span>
-                <span className='font-black text-sm sm:text-base text-white'>{stats?.upload_usage ?? 0} GB</span>
+              <div className='p-3.5 rounded-2xl bg-white/[0.04] border border-white/10 space-y-1'>
+                <span className='text-[10px] font-bold tracking-wider text-sky-400 uppercase block'>UPLOAD</span>
+                <span className='text-lg font-black text-white'>{formatBytes(uploadBytes)}</span>
               </div>
-            </div>
-
-            <div className='space-y-2 pt-2 border-t border-white/20'>
-              <div className='flex items-center justify-between font-bold text-xs sm:text-sm'>
-                <span className='flex items-center gap-2 text-white'>
-                  <GaugeIcon className='h-4 w-4 text-emerald-300' />
-                  Total Used
-                </span>
-                <span className='text-emerald-200 font-black'>
-                  {stats?.total_usage ?? 0} GB {stats?.traffic_limit ? `(${stats.usage_percent}%)` : ''}
-                </span>
-              </div>
-
-              {stats?.traffic_limit && (
-                <Progress value={Number(stats.usage_percent)} className='h-2.5 bg-black/40 [&>div]:bg-emerald-300 rounded-full' />
-              )}
             </div>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+
+      <div className='pt-6 mt-6 border-t border-white/10 flex items-center justify-between text-xs text-slate-400 font-medium'>
+        <span>Total Usage</span>
+        <span className='text-white font-bold'>{formatBytes(transferUsedBytes)}</span>
+      </div>
+    </div>
   )
 }

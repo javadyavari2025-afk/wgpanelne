@@ -3,13 +3,6 @@
 import { IconBrandTelegram } from '@tabler/icons-react'
 import { Send } from 'lucide-react'
 import { ColoredBadge } from '@/features/shared-components/status-badge.tsx'
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { PeerTelegramStatus, TelegramStatus } from '@/schema/telegram.ts'
 
@@ -41,63 +34,64 @@ export default function PeerTelegramCard({
   const account = linkStatus?.username || (linked ? 'Chat linked' : '—')
 
   return (
-    <Card className='flex h-full flex-col justify-between border-2 border-rose-400/50 bg-gradient-to-br from-rose-500/30 via-pink-600/30 to-purple-700/30 backdrop-blur-2xl shadow-2xl shadow-rose-900/30 rounded-3xl overflow-hidden text-white'>
-      <CardHeader className='flex flex-row items-center justify-between pb-3 border-b border-white/20 bg-rose-600/20'>
+    <div className='flex flex-col justify-between rounded-[28px] border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-6 sm:p-7 relative overflow-hidden transition-all duration-300'>
+      <div className='absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent' />
+
+      <div className='flex flex-col md:flex-row md:items-center justify-between pb-4 border-b border-white/10 mb-5 gap-4'>
         <div className='flex items-center gap-3'>
-          <div className='p-2.5 rounded-2xl bg-rose-400/30 text-rose-200 shadow-inner'>
+          <div className='p-2.5 rounded-2xl bg-sky-500/10 text-sky-400 border border-sky-500/20'>
             <IconBrandTelegram className='h-5 w-5' />
           </div>
-          <CardTitle className='text-lg font-black tracking-wide text-white'>Telegram Notification</CardTitle>
+          <span className='text-xs font-bold tracking-wider text-slate-300 uppercase'>Telegram Notification</span>
         </div>
         {!isLoading && (
-          <div className='px-3 py-1 rounded-full bg-white/20 border border-white/30 text-xs font-bold shadow-sm'>
+          <div className='px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-center'>
             <ColoredBadge
               color={linked ? 'green' : 'yellow'}
               text={linked ? 'linked' : 'not linked'}
             />
           </div>
         )}
-      </CardHeader>
+      </div>
 
-      <CardContent className='flex flex-1 flex-col justify-center p-5 sm:p-6'>
+      <div className='py-2'>
         {isLoading ? (
-          <div className='space-y-3 py-2'>
-            <Skeleton className='h-5 w-full bg-white/20' />
-            <Skeleton className='h-5 w-full bg-white/20' />
+          <div className='space-y-3'>
+            <Skeleton className='h-12 w-full bg-white/10' />
           </div>
         ) : (
-          <div className='grid grid-cols-3 gap-3 text-xs sm:text-sm font-medium'>
-            <div className='p-3 rounded-2xl bg-black/40 border border-white/20 text-center shadow-inner'>
-              <span className='block text-rose-200/80 text-[11px] font-bold mb-1'>Bot</span>
+          <div className='grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs sm:text-sm font-medium'>
+            <div className='p-3.5 rounded-2xl bg-white/[0.04] border border-white/15 text-center shadow-inner'>
+              <span className='block text-slate-400 text-[10px] font-bold uppercase mb-1'>Bot</span>
               <span className='font-black text-white truncate block'>{botName}</span>
             </div>
 
-            <div className='p-3 rounded-2xl bg-black/40 border border-white/20 text-center shadow-inner'>
-              <span className='block text-rose-200/80 text-[11px] font-bold mb-1'>Account</span>
+            <div className='p-3.5 rounded-2xl bg-white/[0.04] border border-white/15 text-center shadow-inner'>
+              <span className='block text-slate-400 text-[10px] font-bold uppercase mb-1'>Account</span>
               <span className='font-black text-white truncate block'>{account}</span>
             </div>
 
-            <div className='p-3 rounded-2xl bg-black/40 border border-white/20 text-center shadow-inner'>
-              <span className='block text-rose-200/80 text-[11px] font-bold mb-1'>Alerts</span>
+            <div className='p-3.5 rounded-2xl bg-white/[0.04] border border-white/15 text-center shadow-inner'>
+              <span className='block text-slate-400 text-[10px] font-bold uppercase mb-1'>Alerts</span>
               <span className='font-black text-white block'>{alertsLabel}</span>
             </div>
           </div>
         )}
-      </CardContent>
+      </div>
 
       {startURL && (
-        <CardFooter className='pt-0 pb-5 px-5 sm:px-6'>
+        <div className='pt-6 mt-6 border-t border-white/10'>
           <a
             href={startURL}
             target='_blank'
             rel='noreferrer'
-            className='bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-700 hover:to-pink-700 inline-flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-black text-white shadow-xl border border-white/30 transition-all duration-300'
+            className='bg-gradient-to-r from-sky-600 via-blue-600 to-indigo-600 hover:opacity-90 inline-flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold text-white shadow-lg shadow-sky-600/30 border border-white/25 transition-all'
           >
             <Send className='h-4 w-4' />
             {linked ? 'Open Telegram Bot' : 'Connect Telegram Bot'}
           </a>
-        </CardFooter>
+        </div>
       )}
-    </Card>
+    </div>
   )
 }

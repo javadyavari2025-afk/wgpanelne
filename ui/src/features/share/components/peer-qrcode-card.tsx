@@ -1,73 +1,40 @@
 'use client'
 
-import { useState } from 'react'
-import { QrCode, Eye, EyeOff } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { QRCodeSVG } from 'qrcode.react'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Button } from '@/components/ui/button'
 
-interface QRCodeCardProps {
+interface PeerQrcodeCardProps {
   isLoading: boolean
-  qrCode?: string
+  config: string
 }
 
-export default function PeerQRCodeCard({ isLoading, qrCode }: QRCodeCardProps) {
-  const [isBlurred, setIsBlurred] = useState(true)
-
-  const handleToggleBlur = () => {
-    setIsBlurred((prev) => !prev)
-  }
-
+export default function PeerQrcodeCard({ isLoading, config }: PeerQrcodeCardProps) {
   return (
-    <Card className='flex h-full flex-col justify-between border-2 border-sky-400/50 bg-gradient-to-br from-blue-500/30 via-indigo-600/30 to-sky-700/30 backdrop-blur-2xl shadow-2xl shadow-sky-900/30 rounded-3xl overflow-hidden text-white'>
-      <CardHeader className='flex flex-row items-center justify-between pb-3 border-b border-white/20 bg-sky-600/20'>
-        <div className='flex items-center gap-3'>
-          <div className='p-2.5 rounded-2xl bg-sky-400/30 text-sky-200 shadow-inner'>
-            <QrCode className='h-5 w-5' />
-          </div>
-          <CardTitle className='text-lg font-black tracking-wide text-white'>QR Code</CardTitle>
-        </div>
-        {!isLoading && qrCode && (
-          <Button
-            variant='ghost'
-            size='sm'
-            onClick={handleToggleBlur}
-            className='h-8 px-3 text-xs font-bold text-sky-100 hover:text-white hover:bg-white/20 gap-1.5 rounded-xl border border-white/20'
-          >
-            {isBlurred ? <Eye className='h-4 w-4' /> : <EyeOff className='h-4 w-4' />}
-            {isBlurred ? 'Reveal' : 'Hide'}
-          </Button>
-        )}
-      </CardHeader>
+    <div className='flex flex-col justify-between rounded-[28px] border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] backdrop-blur-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-6 sm:p-7 relative overflow-hidden transition-all duration-300'>
+      <div className='absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent' />
 
-      <CardContent className='flex flex-1 items-center justify-center p-6'>
-        {isLoading ? (
-          <Skeleton className='h-[200px] w-[200px] rounded-2xl bg-white/20' />
-        ) : (
-          <div
-            onClick={handleToggleBlur}
-            className='relative cursor-pointer p-4 rounded-3xl bg-white/20 border border-white/30 shadow-inner transition-all hover:scale-105'
-            title={isBlurred ? 'Click to reveal' : 'Click to hide'}
-          >
-            <img
-              src={qrCode}
-              alt='WireGuard QR Code'
-              width={200}
-              height={200}
-              className={`h-[190px] w-[190px] sm:h-[200px] sm:w-[200px] rounded-2xl transition-all duration-300 bg-white p-2 ${
-                isBlurred ? 'blur-md scale-95 opacity-20' : 'blur-0 scale-100 opacity-100'
-              }`}
-            />
-            {isBlurred && (
-              <div className='absolute inset-0 flex flex-col items-center justify-center rounded-3xl bg-black/40 backdrop-blur-[3px] transition-all'>
-                <span className='px-4 py-2 rounded-full bg-white/30 text-white border border-white/40 text-xs font-bold flex items-center gap-2 shadow-xl'>
-                  <Eye className='h-4 w-4' /> Show QR Code
-                </span>
+      <div>
+        <div className='flex items-center justify-between pb-4 border-b border-white/10 mb-5'>
+          <span className='text-xs font-bold tracking-wider text-slate-300 uppercase'>QR Code</span>
+          <span className='text-xs text-indigo-400 font-medium'>WireGuard</span>
+        </div>
+
+        <div className='flex items-center justify-center py-4'>
+          {isLoading ? (
+            <Skeleton className='w-44 h-44 rounded-2xl bg-white/10' />
+          ) : (
+            <div className='p-4 rounded-2xl bg-white/[0.06] border border-white/15 backdrop-blur-md shadow-inner flex items-center justify-center'>
+              <div className='p-3 bg-slate-900 rounded-xl'>
+                <QRCodeSVG value={config} size={145} includeMargin={false} />
               </div>
-            )}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className='pt-4 text-center'>
+        <p className='text-xs text-slate-400'>Scan with your WireGuard app to connect instantly.</p>
+      </div>
+    </div>
   )
 }

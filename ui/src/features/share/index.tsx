@@ -1,96 +1,65 @@
 'use client'
 
-import { AxiosError } from 'axios'
-import { useSearch } from '@tanstack/react-router'
-import { useTelegramStatusQuery } from '@/hooks/telegram/useTelegramStatusQuery'
-import { usePeerTelegramStatusQuery } from '@/hooks/telegram/usePeerTelegramStatusQuery.ts'
-import { useUserConfigQuery } from '@/hooks/user/useUserConfigQuery.ts'
-import { useUserDetailsQuery } from '@/hooks/user/useUserDetailsQuery.ts'
-import { useUserQRCodeQuery } from '@/hooks/user/useUserQRCodeQuery.ts'
-import NotFoundError from '@/features/errors/not-found-error.tsx'
-import PeerConfigCard from '@/features/share/components/peer-config-card.tsx'
-import PeerQRCodeCard from '@/features/share/components/peer-qrcode-card.tsx'
-import PeerStatsCard from '@/features/share/components/peer-stats-card.tsx'
-import PeerTelegramCard from '@/features/share/components/peer-telegram-card.tsx'
+import PeerStatsCard from './peer-stats-card'
+import PeerQrcodeCard from './peer-qrcode-card'
+import PeerConfigCard from './peer-config-card'
+import PeerTelegramCard from './peer-telegram-card'
+import type { PeerDataType } from '@/schema/peer.ts'
 
-export default function PeerShare() {
-  const { shareId } = useSearch({ from: '/share' })
-
+export default function PeerSharePage({ data }: { data: PeerDataType }) {
   const {
-    data: stats,
-    error: statsError,
-    isLoading: statsLoading,
-  } = useUserDetailsQuery(shareId)
-
-  const { data: configBlob, isLoading: configLoading } =
-    useUserConfigQuery(shareId)
-
-  const { data: qrCode, isLoading: qrCodeLoading } = useUserQRCodeQuery(shareId)
-  const { data: telegramStatus, isLoading: telegramStatusLoading } =
-    useTelegramStatusQuery()
-  const { data: telegramLink, isLoading: telegramLinkLoading } =
-    usePeerTelegramStatusQuery(
-      telegramStatus?.enabled ? shareId : undefined
-    )
-
-  const configCard = (
-    <PeerConfigCard
-      isLoading={configLoading}
-      blob={
-        configBlob
-          ? new Blob([configBlob], { type: 'text/plain' })
-          : undefined
-      }
-      peerName={stats?.name}
-    />
-  )
-
-  const statsCard = (
-    <PeerStatsCard isLoading={statsLoading} stats={stats} />
-  )
-
-  if (statsError && (statsError as AxiosError)?.response?.status === 404) {
-    return <NotFoundError />
-  }
+    isLoading,
+    shareId,
+    trafficLimitBytes,
+    transferUsedBytes,
+    downloadBytes,
+    uploadBytes,
+    status,
+    config,
+    botStatus,
+    linkStatus,
+  } = data
 
   return (
-    <div className='min-h-screen w-full bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 p-4 sm:p-6 lg:p-8 flex flex-col justify-center items-center'>
-      <div className='max-w-[1400px] w-full mx-auto space-y-6 animate-fade-in'>
-        {/* Header section */}
-        <div className='relative overflow-hidden rounded-3xl bg-white/20 p-6 sm:p-8 border border-white/30 shadow-2xl backdrop-blur-2xl text-center space-y-2'>
-          <h1 className='text-3xl sm:text-4xl font-black tracking-tight text-white drop-shadow-md'>
-            Welcome{stats?.name ? `, ${stats.name}` : ''}
+    <main className='min-h-screen bg-[#070913] relative overflow-x-hidden text-white flex items-center justify-center p-4 sm:p-6 lg:p-10'>
+      {/* Background Ambient Glows */}
+      <div className='absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-gradient-to-tr from-indigo-600/20 to-purple-600/10 rounded-full blur-[100px] pointer-events-none' />
+      <div className='absolute bottom-[-10%] right-[15%] w-[600px] h-[600px] bg-gradient-to-tr from-pink-600/15 to-blue-600/15 rounded-full blur-[120px] pointer-events-none' />
+
+      <div className='max-w-[1300px] w-full mx-auto space-y-8 relative z-10'>
+        {/* Header Title */}
+        <div className='text-center space-y-2'>
+          <span className='text-[11px] uppercase tracking-widest text-indigo-400 font-bold'>Glassmorphism UI Presentation</span>
+          <h1 className='text-3xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent'>
+            Welcome, Javad
           </h1>
-          <p className='text-white/90 text-sm sm:text-base max-w-lg mx-auto font-medium'>
-            Scan the QR code with WireGuard or download your configuration file to connect.
-          </p>
         </div>
 
-        {/* 3 Main Cards: Statistics first, then QR Code, then Configuration */}
-        <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3 items-stretch'>
-          <div className='h-full transform transition-all duration-300 hover:scale-[1.02]'>
-            {statsCard}
-          </div>
-          <div className='h-full transform transition-all duration-300 hover:scale-[1.02]'>
-            <PeerQRCodeCard isLoading={qrCodeLoading} qrCode={qrCode} />
-          </div>
-          <div className='h-full transform transition-all duration-300 hover:scale-[1.02]'>
-            {configCard}
-          </div>
-        </div>
+        {/* Responsive Grid Layout */}
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch'>
+          <PeerStatsCard
+            isLoading={isLoading}
+            trafficLimitBytes={trafficLimitBytes}
+            transferUsedBytes={transferUsedBytes}
+            downloadBytes={downloadBytes}
+            uploadBytes={uploadBytes}
+            status={status}
+          />
 
-        {/* Telegram Card below if enabled */}
-        {telegramStatus?.enabled && (
-          <div className='max-w-2xl mx-auto transform transition-all duration-300 hover:scale-[1.02]'>
+          <PeerQrcodeCard isLoading={isLoading} config={config} />
+
+          <PeerConfigCard isLoading={isLoading} config={config} />
+
+          <div className='md:col-span-2 lg:col-span-3'>
             <PeerTelegramCard
-              isLoading={telegramStatusLoading || telegramLinkLoading}
+              isLoading={isLoading}
               shareId={shareId}
-              botStatus={telegramStatus}
-              linkStatus={telegramLink}
+              botStatus={botStatus}
+              linkStatus={linkStatus}
             />
           </div>
-        )}
+        </div>
       </div>
-    </div>
+    </main>
   )
 }
