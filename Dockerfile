@@ -6,14 +6,26 @@ RUN apk add --no-cache nodejs npm
 WORKDIR /app
 COPY . .
 
-# Build frontend assets inside the ui directory
+# لیست کردن محتویات پوشه برای دیدن ساختار پروژه در لاگ‌ها
+RUN ls -la /app
+
 WORKDIR /app/ui
 RUN if [ -f "package.json" ]; then npm install && npm run build; fi
 
-# Switch back explicitly to the root /app directory for Go compilation
 WORKDIR /app
 RUN go mod download
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o mwp.linux.amd64 .
+# جستجوی خودکار و بیلد فایل‌های گو بر اساس پوشه‌های احتمالی
+RUN set -eux; \
+    if [ -d "src" ]; then \
+        CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/mwp.linux.amd64 ./src; \
+    elif [ -d "cmd" ]; then \
+        CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/mwp.linux.amd64 ./cmd; \
+    elif [ -f "main.go" ]; then \
+        CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/mwp.linux.amd64 .; \
+    else \
+        # اگر پوشه خاصی نبود، فایل‌های گو را در زیرپوشه‌ها جستجو کن
+        go build -o /app/mwp.linux.amd64 ./...; \
+    fi
 
 # --- Stage 2: Final runtime image ---
 FROM alpine:3
@@ -32,7 +44,6 @@ RUN set -eux && \
 WORKDIR /var/www/mwp
 VOLUME /var/www/mwp
 
-# Copy the binary built in stage 1
 COPY --from=builder /app/mwp.linux.amd64 /usr/local/sbin/mwp
 
 RUN set -eux; \
