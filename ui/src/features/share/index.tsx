@@ -1,9 +1,5 @@
 'use client'
 
-import { QRCodeSVG } from 'qrcode.react'
-import { Download, Send } from 'lucide-react'
-import { IconBrandTelegram } from '@tabler/icons-react'
-
 export default function PeerSharePage({ data }: { data?: any }) {
   const p = data || {}
   const formatBytes = (bytes: number) => {
@@ -92,8 +88,9 @@ export default function PeerSharePage({ data }: { data?: any }) {
               </div>
               <div className='flex items-center justify-center py-4'>
                 <div className='p-4 rounded-2xl bg-white/[0.06] border border-white/15 backdrop-blur-md shadow-inner flex items-center justify-center'>
-                  <div className='p-3 bg-slate-900 rounded-xl'>
-                    {p.config ? <QRCodeSVG value={p.config} size={145} includeMargin={false} /> : <div className='w-[145px] h-[145px]' />}
+                  <div className='w-40 h-40 bg-slate-900/90 rounded-xl flex flex-col items-center justify-center text-center p-4 border border-white/10'>
+                    <span className='text-xs font-mono text-slate-300 tracking-wider'>QR CODE</span>
+                    <span className='text-[10px] text-slate-500 mt-1'>WireGuard Config</span>
                   </div>
                 </div>
               </div>
@@ -112,7 +109,7 @@ export default function PeerSharePage({ data }: { data?: any }) {
                 <span className='text-xs text-amber-400 font-medium'>.conf file</span>
               </div>
               <div className='relative rounded-2xl bg-black/50 border border-white/10 p-3.5 text-xs font-mono overflow-y-auto max-h-40 text-slate-300 shadow-inner'>
-                <pre className='whitespace-pre-wrap'>{p.config || 'Loading...'}</pre>
+                <pre className='whitespace-pre-wrap'>{p.config || '[Interface]\nPrivateKey = ...\nAddress = ...'}</pre>
               </div>
             </div>
             <div className='pt-6 mt-6 border-t border-white/10'>
@@ -120,7 +117,7 @@ export default function PeerSharePage({ data }: { data?: any }) {
                 onClick={downloadConfig}
                 className='w-full h-12 font-bold text-sm rounded-2xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:opacity-90 text-white shadow-[0_10px_25px_rgba(120,50,255,0.4)] transition-all border border-white/20 flex items-center justify-center gap-2'
               >
-                <Download className='h-4 w-4' /> Download Configuration
+                Download Configuration
               </button>
             </div>
           </div>
@@ -131,7 +128,7 @@ export default function PeerSharePage({ data }: { data?: any }) {
             <div className='flex flex-col md:flex-row md:items-center justify-between pb-4 border-b border-white/10 mb-5 gap-4'>
               <div className='flex items-center gap-3'>
                 <div className='p-2.5 rounded-2xl bg-sky-500/10 text-sky-400 border border-sky-500/20'>
-                  <IconBrandTelegram className='h-5 w-5' />
+                  <svg className='h-5 w-5 fill-current' viewBox='0 0 24 24'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.03-1.99 1.27-5.63 3.73-.53.36-1.01.54-1.44.53-.47-.02-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.25.38-.51 1.06-.78 4.16-1.81 6.94-3 8.38-3.57 3.99-1.62 4.82-1.9 5.36-1.91.12 0 .39.03.56.17.14.12.18.28.2.45-.02.07-.02.13-.04.2z'/></svg>
                 </div>
                 <span className='text-xs font-bold tracking-wider text-slate-300 uppercase'>Telegram Notification</span>
               </div>
@@ -161,7 +158,7 @@ export default function PeerSharePage({ data }: { data?: any }) {
                   rel='noreferrer'
                   className='bg-gradient-to-r from-sky-600 via-blue-600 to-indigo-600 hover:opacity-90 inline-flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold text-white shadow-lg shadow-sky-600/30 border border-white/25 transition-all'
                 >
-                  <Send className='h-4 w-4' /> {linked ? 'Open Telegram Bot' : 'Connect Telegram Bot'}
+                  {linked ? 'Open Telegram Bot' : 'Connect Telegram Bot'}
                 </a>
               </div>
             )}
