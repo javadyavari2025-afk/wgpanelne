@@ -1,7 +1,7 @@
 'use client'
 
 import { IconBrandTelegram } from '@tabler/icons-react'
-import { BellIcon, UserIcon, Send } from 'lucide-react'
+import { Send } from 'lucide-react'
 import { ColoredBadge } from '@/features/shared-components/status-badge.tsx'
 import {
   Card,
