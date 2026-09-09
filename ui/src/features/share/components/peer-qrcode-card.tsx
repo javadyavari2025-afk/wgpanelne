@@ -19,49 +19,49 @@ export default function PeerQRCodeCard({ isLoading, qrCode }: QRCodeCardProps) {
   }
 
   return (
-    <Card className='flex h-full flex-col justify-between border-border/60 bg-gradient-to-b from-card/80 to-card shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden'>
-      <CardHeader className='flex flex-row items-center justify-between pb-3 border-b border-border/40'>
+    <Card className='flex h-full flex-col justify-between border-sky-500/30 bg-gradient-to-br from-sky-500/10 via-sky-950/20 to-sky-900/10 backdrop-blur-xl shadow-xl shadow-sky-500/5 hover:border-sky-500/50 transition-all duration-300 rounded-2xl overflow-hidden'>
+      <CardHeader className='flex flex-row items-center justify-between pb-2 border-b border-sky-500/20 bg-sky-500/5'>
         <div className='flex items-center gap-2.5'>
-          <div className='p-2 rounded-xl bg-blue-500/10 text-blue-500 shadow-inner'>
-            <QrCode className='h-5 w-5' />
+          <div className='p-2 rounded-xl bg-sky-500/20 text-sky-400 shadow-inner'>
+            <QrCode className='h-4 w-4' />
           </div>
-          <CardTitle className='text-lg font-bold'>QR Code</CardTitle>
+          <CardTitle className='text-base font-bold text-sky-100'>QR Code</CardTitle>
         </div>
         {!isLoading && qrCode && (
           <Button
             variant='ghost'
             size='sm'
             onClick={handleToggleBlur}
-            className='h-8 px-2 text-xs text-muted-foreground hover:text-foreground gap-1.5'
+            className='h-7 px-2 text-xs text-sky-300 hover:text-white hover:bg-sky-500/20 gap-1'
           >
-            {isBlurred ? <Eye className='h-4 w-4' /> : <EyeOff className='h-4 w-4' />}
+            {isBlurred ? <Eye className='h-3.5 w-3.5' /> : <EyeOff className='h-3.5 w-3.5' />}
             {isBlurred ? 'Reveal' : 'Hide'}
           </Button>
         )}
       </CardHeader>
 
-      <CardContent className='flex flex-1 items-center justify-center p-6'>
+      <CardContent className='flex flex-1 items-center justify-center p-4 sm:p-5'>
         {isLoading ? (
-          <Skeleton className='h-[260px] w-[260px] rounded-2xl' />
+          <Skeleton className='h-[200px] w-[200px] rounded-2xl bg-sky-500/10' />
         ) : (
           <div
             onClick={handleToggleBlur}
-            className='relative cursor-pointer group p-4 rounded-2xl bg-zinc-950/5 dark:bg-zinc-900/40 border border-border/50 shadow-inner transition-all hover:border-primary/40'
+            className='relative cursor-pointer p-3 rounded-2xl bg-black/40 border border-sky-500/20 shadow-inner transition-all hover:border-sky-400/40'
             title={isBlurred ? 'Click to reveal' : 'Click to hide'}
           >
             <img
               src={qrCode}
               alt='WireGuard QR Code'
-              width={240}
-              height={240}
-              className={`h-[240px] w-[240px] rounded-xl transition-all duration-300 ${
-                isBlurred ? 'blur-md scale-95 opacity-40' : 'blur-0 scale-100 opacity-100'
+              width={200}
+              height={200}
+              className={`h-[190px] w-[190px] sm:h-[200px] sm:w-[200px] rounded-xl transition-all duration-300 ${
+                isBlurred ? 'blur-md scale-95 opacity-30' : 'blur-0 scale-100 opacity-100'
               }`}
             />
             {isBlurred && (
-              <div className='absolute inset-0 flex flex-col items-center justify-center rounded-2xl bg-background/50 backdrop-blur-[2px] transition-all'>
-                <span className='px-4 py-2 rounded-full bg-primary/10 text-primary border border-primary/20 shadow-sm text-xs font-medium flex items-center gap-2'>
-                  <Eye className='h-3.5 w-3.5' /> Click to show QR Code
+              <div className='absolute inset-0 flex flex-col items-center justify-center rounded-2xl bg-sky-950/40 backdrop-blur-[2px] transition-all'>
+                <span className='px-3 py-1.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-400/30 text-xs font-medium flex items-center gap-1.5 shadow-lg'>
+                  <Eye className='h-3.5 w-3.5' /> Show QR
                 </span>
               </div>
             )}

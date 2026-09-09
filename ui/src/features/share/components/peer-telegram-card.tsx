@@ -41,13 +41,13 @@ export default function PeerTelegramCard({
   const account = linkStatus?.username || (linked ? 'Chat linked' : '—')
 
   return (
-    <Card className='flex h-full flex-col justify-between border-border/60 bg-gradient-to-b from-card/80 to-card shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden'>
-      <CardHeader className='flex flex-row items-center justify-between pb-3 border-b border-border/40'>
+    <Card className='flex h-full flex-col justify-between border-rose-500/30 bg-gradient-to-br from-rose-500/10 via-rose-950/20 to-red-950/10 backdrop-blur-xl shadow-xl shadow-rose-500/5 hover:border-rose-500/50 transition-all duration-300 rounded-2xl overflow-hidden'>
+      <CardHeader className='flex flex-row items-center justify-between pb-2 border-b border-rose-500/20 bg-rose-500/5'>
         <div className='flex items-center gap-2.5'>
-          <div className='p-2 rounded-xl bg-sky-500/10 text-sky-500 shadow-inner'>
-            <IconBrandTelegram className='h-5 w-5' />
+          <div className='p-2 rounded-xl bg-rose-500/20 text-rose-400 shadow-inner'>
+            <IconBrandTelegram className='h-4 w-4' />
           </div>
-          <CardTitle className='text-lg font-bold'>Telegram</CardTitle>
+          <CardTitle className='text-base font-bold text-rose-100'>Telegram Notification</CardTitle>
         </div>
         {!isLoading && (
           <ColoredBadge
@@ -57,52 +57,42 @@ export default function PeerTelegramCard({
         )}
       </CardHeader>
 
-      <CardContent className='flex flex-1 flex-col justify-center pt-4'>
+      <CardContent className='flex flex-1 flex-col justify-center p-4 sm:p-5'>
         {isLoading ? (
-          <div className='space-y-3 py-2'>
-            <Skeleton className='h-5 w-full rounded-md' />
-            <Skeleton className='h-5 w-full rounded-md' />
-            <Skeleton className='h-5 w-full rounded-md' />
+          <div className='space-y-2 py-2'>
+            <Skeleton className='h-4 w-full bg-rose-500/10' />
+            <Skeleton className='h-4 w-full bg-rose-500/10' />
           </div>
         ) : (
-          <div className='space-y-3.5 text-sm'>
-            <div className='flex items-center justify-between p-2.5 rounded-xl bg-zinc-950/5 dark:bg-zinc-900/30 border border-border/40'>
-              <span className='flex items-center gap-2.5 text-muted-foreground font-medium'>
-                <IconBrandTelegram className='h-4 w-4 text-sky-500' />
-                Bot
-              </span>
-              <span className='font-semibold'>{botName}</span>
+          <div className='grid grid-cols-3 gap-2 text-xs'>
+            <div className='p-2 rounded-xl bg-black/40 border border-rose-500/20 text-center'>
+              <span className='block text-rose-300/70 text-[10px] mb-0.5'>Bot</span>
+              <span className='font-bold text-rose-100 truncate block'>{botName}</span>
             </div>
 
-            <div className='flex items-center justify-between p-2.5 rounded-xl bg-zinc-950/5 dark:bg-zinc-900/30 border border-border/40'>
-              <span className='flex items-center gap-2.5 text-muted-foreground font-medium'>
-                <UserIcon className='h-4 w-4 text-sky-500' />
-                Account
-              </span>
-              <span className='font-semibold'>{account}</span>
+            <div className='p-2 rounded-xl bg-black/40 border border-rose-500/20 text-center'>
+              <span className='block text-rose-300/70 text-[10px] mb-0.5'>Account</span>
+              <span className='font-bold text-rose-100 truncate block'>{account}</span>
             </div>
 
-            <div className='flex items-center justify-between p-2.5 rounded-xl bg-zinc-950/5 dark:bg-zinc-900/30 border border-border/40'>
-              <span className='flex items-center gap-2.5 text-muted-foreground font-medium'>
-                <BellIcon className='h-4 w-4 text-sky-500' />
-                Alerts
-              </span>
-              <span className='font-semibold'>{alertsLabel}</span>
+            <div className='p-2 rounded-xl bg-black/40 border border-rose-500/20 text-center'>
+              <span className='block text-rose-300/70 text-[10px] mb-0.5'>Alerts</span>
+              <span className='font-bold text-rose-100 block'>{alertsLabel}</span>
             </div>
           </div>
         )}
       </CardContent>
 
       {startURL && (
-        <CardFooter className='pt-0 pb-5 px-6'>
+        <CardFooter className='pt-0 pb-4 px-4 sm:px-5'>
           <a
             href={startURL}
             target='_blank'
             rel='noreferrer'
-            className='bg-[#2AABEE] hover:bg-[#229ED9] inline-flex w-full items-center justify-center gap-2.5 rounded-xl px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-sky-500/25 hover:shadow-sky-500/40 transition-all duration-300'
+            className='bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold text-white shadow-lg shadow-rose-500/20 transition-all duration-300'
           >
-            <Send className='h-4 w-4' />
-            {linked ? 'Open Telegram Bot' : 'Connect to Telegram Bot'}
+            <Send className='h-3.5 w-3.5' />
+            {linked ? 'Open Telegram Bot' : 'Connect Telegram Bot'}
           </a>
         </CardFooter>
       )}
