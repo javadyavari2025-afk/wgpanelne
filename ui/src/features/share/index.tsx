@@ -4,11 +4,9 @@ import PeerStatsCard from './peer-stats-card'
 import PeerQrcodeCard from './peer-qrcode-card'
 import PeerConfigCard from './peer-config-card'
 import PeerTelegramCard from './peer-telegram-card'
-import type { PeerDataType } from '@/schema/peer'
 
-export default function PeerSharePage({ data }: PeerDataType & { data?: PeerDataType }) {
-  // اگر دیتا به صورت مستقیم یا از داخل پراپ ارسال شده باشد
-  const peerData = data || ({} as PeerDataType)
+export default function PeerSharePage({ data }: { data?: any }) {
+  const peerData = data || {}
   const {
     isLoading,
     shareId,
