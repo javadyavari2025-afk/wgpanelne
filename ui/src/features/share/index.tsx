@@ -4,9 +4,11 @@ import PeerStatsCard from './peer-stats-card'
 import PeerQrcodeCard from './peer-qrcode-card'
 import PeerConfigCard from './peer-config-card'
 import PeerTelegramCard from './peer-telegram-card'
-import type { PeerDataType } from '@/schema/peer.ts'
+import type { PeerDataType } from '@/schema/peer'
 
-export default function PeerSharePage({ data }: { data: PeerDataType }) {
+export default function PeerSharePage({ data }: PeerDataType & { data?: PeerDataType }) {
+  // اگر دیتا به صورت مستقیم یا از داخل پراپ ارسال شده باشد
+  const peerData = data || ({} as PeerDataType)
   const {
     isLoading,
     shareId,
@@ -18,7 +20,7 @@ export default function PeerSharePage({ data }: { data: PeerDataType }) {
     config,
     botStatus,
     linkStatus,
-  } = data
+  } = peerData
 
   return (
     <main className='min-h-screen bg-[#070913] relative overflow-x-hidden text-white flex items-center justify-center p-4 sm:p-6 lg:p-10'>
@@ -38,22 +40,22 @@ export default function PeerSharePage({ data }: { data: PeerDataType }) {
         {/* Responsive Grid Layout */}
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch'>
           <PeerStatsCard
-            isLoading={isLoading}
-            trafficLimitBytes={trafficLimitBytes}
-            transferUsedBytes={transferUsedBytes}
-            downloadBytes={downloadBytes}
-            uploadBytes={uploadBytes}
-            status={status}
+            isLoading={Boolean(isLoading)}
+            trafficLimitBytes={trafficLimitBytes ?? null}
+            transferUsedBytes={transferUsedBytes ?? 0}
+            downloadBytes={downloadBytes ?? 0}
+            uploadBytes={uploadBytes ?? 0}
+            status={status || { online: false }}
           />
 
-          <PeerQrcodeCard isLoading={isLoading} config={config} />
+          <PeerQrcodeCard isLoading={Boolean(isLoading)} config={config || ''} />
 
-          <PeerConfigCard isLoading={isLoading} config={config} />
+          <PeerConfigCard isLoading={Boolean(isLoading)} config={config || ''} />
 
           <div className='md:col-span-2 lg:col-span-3'>
             <PeerTelegramCard
-              isLoading={isLoading}
-              shareId={shareId}
+              isLoading={Boolean(isLoading)}
+              shareId={shareId || ''}
               botStatus={botStatus}
               linkStatus={linkStatus}
             />
