@@ -12,6 +12,7 @@ RUN if [ -f "package.json" ]; then npm install && npm run build; fi
 
 # Find main.go automatically anywhere in the repository and build it
 WORKDIR /app
+ENV GOPROXY=direct
 RUN go mod download
 RUN set -eux; \
     MAIN_FILE=$(find . -name "main.go" -print -quit); \
