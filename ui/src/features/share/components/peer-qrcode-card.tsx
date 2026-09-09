@@ -1,7 +1,5 @@
 'use client'
 
-import { QRCodeSVG } from 'qrcode.react'
-
 interface PeerQrcodeCardProps {
   isLoading?: boolean
   config: string
@@ -18,14 +16,9 @@ export default function PeerQrcodeCard({ isLoading, config }: PeerQrcodeCardProp
         </div>
         <div className='flex items-center justify-center py-4'>
           <div className='p-4 rounded-2xl bg-white/[0.06] border border-white/15 backdrop-blur-md shadow-inner flex items-center justify-center'>
-            <div className='p-3 bg-slate-900 rounded-xl'>
-              {isLoading ? (
-                <div className='w-[145px] h-[145px] flex items-center justify-center text-slate-400 text-xs'>Loading...</div>
-              ) : config ? (
-                <QRCodeSVG value={config} size={145} includeMargin={false} />
-              ) : (
-                <div className='w-[145px] h-[145px] flex items-center justify-center text-slate-500 text-xs'>No Config</div>
-              )}
+            <div className='w-40 h-40 bg-slate-900/90 rounded-xl flex flex-col items-center justify-center text-center p-4 border border-white/10'>
+              <span className='text-xs font-mono text-slate-300 tracking-wider'>{isLoading ? 'LOADING...' : 'QR CODE'}</span>
+              <span className='text-[10px] text-slate-500 mt-1 truncate max-w-full'>{config ? 'WireGuard Config' : 'No Config'}</span>
             </div>
           </div>
         </div>
