@@ -31,91 +31,91 @@ function remainingDays(expireTime: string | null | undefined): number {
 
 export default function PeerStatsCard({ isLoading, stats }: StatsCardProps) {
   const status = stats?.is_online ? 'Online' : 'Offline'
-  const statusColor = stats?.is_online ? 'text-emerald-400' : 'text-rose-400'
+  const statusColor = stats?.is_online ? 'text-emerald-300' : 'text-rose-300'
 
   return (
-    <Card className='flex h-full flex-col justify-between border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 via-emerald-950/20 to-teal-950/10 backdrop-blur-xl shadow-xl shadow-emerald-500/5 hover:border-emerald-500/50 transition-all duration-300 rounded-2xl overflow-hidden'>
-      <CardHeader className='flex flex-row items-center justify-between pb-2 border-b border-emerald-500/20 bg-emerald-500/5'>
-        <div className='flex items-center gap-2.5'>
-          <div className='p-2 rounded-xl bg-emerald-500/20 text-emerald-400 shadow-inner'>
-            <Activity className='h-4 w-4' />
+    <Card className='flex h-full flex-col justify-between border-2 border-emerald-400/50 bg-gradient-to-br from-emerald-500/30 via-teal-600/30 to-cyan-700/30 backdrop-blur-2xl shadow-2xl shadow-emerald-900/30 rounded-3xl overflow-hidden text-white'>
+      <CardHeader className='flex flex-row items-center justify-between pb-3 border-b border-white/20 bg-emerald-600/20'>
+        <div className='flex items-center gap-3'>
+          <div className='p-2.5 rounded-2xl bg-emerald-400/30 text-emerald-200 shadow-inner'>
+            <Activity className='h-5 w-5' />
           </div>
-          <CardTitle className='text-base font-bold text-emerald-100'>Statistics</CardTitle>
+          <CardTitle className='text-lg font-black tracking-wide text-white'>Statistics</CardTitle>
         </div>
       </CardHeader>
 
-      <CardContent className='flex flex-1 flex-col justify-center p-4 sm:p-5'>
+      <CardContent className='flex flex-1 flex-col justify-center p-5 sm:p-6'>
         {isLoading ? (
           <div className='space-y-3 py-2'>
-            <Skeleton className='h-4 w-full bg-emerald-500/10' />
-            <Skeleton className='h-4 w-full bg-emerald-500/10' />
-            <Skeleton className='h-4 w-full bg-emerald-500/10' />
-            <Skeleton className='h-4 w-full bg-emerald-500/10' />
+            <Skeleton className='h-5 w-full bg-white/20' />
+            <Skeleton className='h-5 w-full bg-white/20' />
+            <Skeleton className='h-5 w-full bg-white/20' />
+            <Skeleton className='h-5 w-full bg-white/20' />
           </div>
         ) : (
-          <div className='space-y-2.5 text-xs sm:text-sm'>
-            <div className='flex items-center justify-between p-2 rounded-xl bg-black/40 border border-emerald-500/20'>
-              <span className='flex items-center gap-2 text-emerald-200/70 font-medium text-xs'>
-                <EthernetPortIcon className='h-3.5 w-3.5 text-emerald-400' />
+          <div className='space-y-3 text-xs sm:text-sm font-medium'>
+            <div className='flex items-center justify-between p-3 rounded-2xl bg-white/15 border border-white/20 shadow-sm'>
+              <span className='flex items-center gap-2 text-emerald-100 font-semibold'>
+                <EthernetPortIcon className='h-4 w-4 text-emerald-300' />
                 Status
               </span>
-              <div className='flex items-center gap-1.5 font-semibold px-2 py-0.5 rounded-full bg-emerald-950/60 border border-emerald-500/30'>
-                <IconCircleFilled className={clsx('h-2 w-2 animate-pulse', statusColor)} />
-                <span className={clsx('capitalize text-xs', statusColor)}>{status}</span>
+              <div className='flex items-center gap-1.5 font-bold px-3 py-1 rounded-full bg-black/30 border border-white/20'>
+                <IconCircleFilled className={clsx('h-2.5 w-2.5 animate-pulse', statusColor)} />
+                <span className={clsx('capitalize', statusColor)}>{status}</span>
               </div>
             </div>
 
-            <div className='flex items-center justify-between p-2 rounded-xl bg-black/40 border border-emerald-500/20'>
-              <span className='flex items-center gap-2 text-emerald-200/70 font-medium text-xs'>
-                <WifiHighIcon className='h-3.5 w-3.5 text-emerald-400' />
+            <div className='flex items-center justify-between p-3 rounded-2xl bg-white/15 border border-white/20 shadow-sm'>
+              <span className='flex items-center gap-2 text-emerald-100 font-semibold'>
+                <WifiHighIcon className='h-4 w-4 text-emerald-300' />
                 Limit
               </span>
-              <span className='font-bold text-emerald-100 text-xs'>
+              <span className='font-bold text-white'>
                 {stats?.traffic_limit ? `${stats.traffic_limit} GB` : 'Unlimited'}
               </span>
             </div>
 
-            <div className='flex items-center justify-between p-2 rounded-xl bg-black/40 border border-emerald-500/20'>
-              <span className='flex items-center gap-2 text-emerald-200/70 font-medium text-xs'>
-                <ClockFadingIcon className='h-3.5 w-3.5 text-emerald-400' />
+            <div className='flex items-center justify-between p-3 rounded-2xl bg-white/15 border border-white/20 shadow-sm'>
+              <span className='flex items-center gap-2 text-emerald-100 font-semibold'>
+                <ClockFadingIcon className='h-4 w-4 text-emerald-300' />
                 Expire
               </span>
-              <span className='font-bold text-emerald-100 text-xs'>
+              <span className='font-bold text-white'>
                 {stats?.expire_time ? `${remainingDays(stats?.expire_time)}d left` : 'Never'}
               </span>
             </div>
 
-            <div className='grid grid-cols-2 gap-2 pt-0.5'>
-              <div className='flex items-center justify-between p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20'>
-                <span className='flex items-center gap-1 text-[11px] text-emerald-300/80'>
-                  <ArrowDownIcon className='h-3 w-3 text-emerald-400' />
-                  DL
+            <div className='grid grid-cols-2 gap-3 pt-1'>
+              <div className='flex flex-col justify-between p-3 rounded-2xl bg-emerald-500/30 border border-white/20 shadow-inner space-y-1'>
+                <span className='flex items-center gap-1.5 text-xs text-emerald-200 font-bold'>
+                  <ArrowDownIcon className='h-3.5 w-3.5 text-emerald-300' />
+                  DOWNLOAD
                 </span>
-                <span className='font-bold text-xs text-emerald-100'>{stats?.download_usage ?? 0} GB</span>
+                <span className='font-black text-sm sm:text-base text-white'>{stats?.download_usage ?? 0} GB</span>
               </div>
 
-              <div className='flex items-center justify-between p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20'>
-                <span className='flex items-center gap-1 text-[11px] text-emerald-300/80'>
-                  <ArrowUpIcon className='h-3 w-3 text-emerald-400' />
-                  UL
+              <div className='flex flex-col justify-between p-3 rounded-2xl bg-emerald-500/30 border border-white/20 shadow-inner space-y-1'>
+                <span className='flex items-center gap-1.5 text-xs text-emerald-200 font-bold'>
+                  <ArrowUpIcon className='h-3.5 w-3.5 text-emerald-300' />
+                  UPLOAD
                 </span>
-                <span className='font-bold text-xs text-emerald-100'>{stats?.upload_usage ?? 0} GB</span>
+                <span className='font-black text-sm sm:text-base text-white'>{stats?.upload_usage ?? 0} GB</span>
               </div>
             </div>
 
-            <div className='space-y-1.5 pt-1 border-t border-emerald-500/20'>
-              <div className='flex items-center justify-between font-semibold text-xs'>
-                <span className='flex items-center gap-2 text-emerald-200'>
-                  <GaugeIcon className='h-3.5 w-3.5 text-emerald-400' />
+            <div className='space-y-2 pt-2 border-t border-white/20'>
+              <div className='flex items-center justify-between font-bold text-xs sm:text-sm'>
+                <span className='flex items-center gap-2 text-white'>
+                  <GaugeIcon className='h-4 w-4 text-emerald-300' />
                   Total Used
                 </span>
-                <span className='text-emerald-300 font-bold'>
+                <span className='text-emerald-200 font-black'>
                   {stats?.total_usage ?? 0} GB {stats?.traffic_limit ? `(${stats.usage_percent}%)` : ''}
                 </span>
               </div>
 
               {stats?.traffic_limit && (
-                <Progress value={Number(stats.usage_percent)} className='h-2 bg-black/50 [&>div]:bg-emerald-500' />
+                <Progress value={Number(stats.usage_percent)} className='h-2.5 bg-black/40 [&>div]:bg-emerald-300 rounded-full' />
               )}
             </div>
           </div>

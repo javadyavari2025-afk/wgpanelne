@@ -58,53 +58,53 @@ export default function PeerConfigCard({
   }
 
   return (
-    <Card className='flex h-full flex-col justify-between border-amber-500/30 bg-gradient-to-br from-amber-500/10 via-amber-950/20 to-orange-950/10 backdrop-blur-xl shadow-xl shadow-amber-500/5 hover:border-amber-500/50 transition-all duration-300 rounded-2xl overflow-hidden'>
-      <CardHeader className='flex flex-row items-center justify-between pb-2 border-b border-amber-500/20 bg-amber-500/5'>
-        <div className='flex items-center gap-2.5'>
-          <div className='p-2 rounded-xl bg-amber-500/20 text-amber-400 shadow-inner'>
-            <FileText className='h-4 w-4' />
+    <Card className='flex h-full flex-col justify-between border-2 border-amber-400/50 bg-gradient-to-br from-amber-500/30 via-orange-600/30 to-rose-700/30 backdrop-blur-2xl shadow-2xl shadow-amber-900/30 rounded-3xl overflow-hidden text-white'>
+      <CardHeader className='flex flex-row items-center justify-between pb-3 border-b border-white/20 bg-amber-600/20'>
+        <div className='flex items-center gap-3'>
+          <div className='p-2.5 rounded-2xl bg-amber-400/30 text-amber-200 shadow-inner'>
+            <FileText className='h-5 w-5' />
           </div>
-          <CardTitle className='text-base font-bold text-amber-100'>Configuration</CardTitle>
+          <CardTitle className='text-lg font-black tracking-wide text-white'>Configuration</CardTitle>
         </div>
         {!isLoading && configText && (
           <Button
             variant='ghost'
             size='sm'
             onClick={toggleBlur}
-            className='h-7 px-2 text-xs text-amber-300 hover:text-white hover:bg-amber-500/20 gap-1'
+            className='h-8 px-3 text-xs font-bold text-amber-100 hover:text-white hover:bg-white/20 gap-1.5 rounded-xl border border-white/20'
           >
-            {isBlurred ? <Eye className='h-3.5 w-3.5' /> : <EyeOff className='h-3.5 w-3.5' />}
+            {isBlurred ? <Eye className='h-4 w-4' /> : <EyeOff className='h-4 w-4' />}
             {isBlurred ? 'Reveal' : 'Hide'}
           </Button>
         )}
       </CardHeader>
       
-      <CardContent className='flex flex-1 flex-col p-4 sm:p-5'>
+      <CardContent className='flex flex-1 flex-col p-5 sm:p-6'>
         {isLoading ? (
-          <div className='flex flex-1 flex-col justify-center space-y-2 py-2'>
-            <Skeleton className='h-3.5 w-full bg-amber-500/10' />
-            <Skeleton className='h-3.5 w-5/6 bg-amber-500/10' />
-            <Skeleton className='h-3.5 w-4/6 bg-amber-500/10' />
-            <Skeleton className='h-3.5 w-3/6 bg-amber-500/10' />
+          <div className='flex flex-1 flex-col justify-center space-y-3 py-2'>
+            <Skeleton className='h-4 w-full bg-white/20' />
+            <Skeleton className='h-4 w-5/6 bg-white/20' />
+            <Skeleton className='h-4 w-4/6 bg-white/20' />
+            <Skeleton className='h-4 w-3/6 bg-white/20' />
           </div>
         ) : (
           <div
-            className='relative min-h-[11rem] flex-1 cursor-pointer overflow-auto rounded-xl bg-black/40 border border-amber-500/20 p-3 text-xs transition-colors hover:border-amber-400/40'
+            className='relative min-h-[12rem] flex-1 cursor-pointer overflow-auto rounded-2xl bg-black/40 border border-white/20 p-4 text-xs transition-colors shadow-inner'
             onClick={toggleBlur}
             title={isBlurred ? 'Click to reveal' : 'Click to hide'}
           >
             <pre
               className={`font-mono break-words whitespace-pre-wrap transition-all duration-300 ${
-                isBlurred ? 'blur-md select-none opacity-30' : 'blur-0 opacity-100 text-amber-100'
+                isBlurred ? 'blur-md select-none opacity-20' : 'blur-0 opacity-100 text-amber-100'
               }`}
             >
               <code>{configText}</code>
             </pre>
 
             {isBlurred && (
-              <div className='absolute inset-0 flex items-center justify-center rounded-xl bg-amber-950/40 backdrop-blur-[2px] text-xs font-medium'>
-                <span className='px-3 py-1.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30 flex items-center gap-1.5 shadow-lg'>
-                  <Eye className='h-3.5 w-3.5' /> Reveal Config
+              <div className='absolute inset-0 flex items-center justify-center rounded-2xl bg-black/50 backdrop-blur-[3px] text-xs font-medium'>
+                <span className='px-4 py-2 rounded-full bg-white/20 text-white border border-white/30 text-xs font-bold flex items-center gap-2 shadow-xl'>
+                  <Eye className='h-4 w-4' /> Reveal Config
                 </span>
               </div>
             )}
@@ -117,9 +117,9 @@ export default function PeerConfigCard({
                   e.stopPropagation()
                   handleCopy()
                 }}
-                className='absolute top-2 right-2 h-7 px-2 text-xs bg-amber-500/20 text-amber-200 hover:bg-amber-500/30 border border-amber-500/30 gap-1'
+                className='absolute top-3 right-3 h-8 px-3 text-xs font-bold bg-white/20 text-white hover:bg-white/30 border border-white/30 gap-1.5 shadow-lg'
               >
-                <CopyIcon className='h-3 w-3 text-amber-400' />
+                <CopyIcon className='h-3.5 w-3.5 text-amber-200' />
                 Copy
               </Button>
             )}
@@ -128,12 +128,12 @@ export default function PeerConfigCard({
       </CardContent>
 
       {!isLoading && (
-        <CardFooter className='pt-0 pb-4 px-4 sm:px-5'>
+        <CardFooter className='pt-0 pb-5 px-5 sm:px-6'>
           <Button 
-            className='w-full h-9 gap-2 text-xs font-bold shadow-lg shadow-amber-500/10 hover:shadow-amber-500/20 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 rounded-xl' 
+            className='w-full h-11 gap-2 text-sm font-black shadow-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border border-white/30 rounded-2xl' 
             onClick={handleDownload}
           >
-            <Download className='h-3.5 w-3.5' />
+            <Download className='h-4 w-4' />
             Download Config
           </Button>
         </CardFooter>

@@ -54,41 +54,43 @@ export default function PeerShare() {
   }
 
   return (
-    <div className='max-w-[1400px] mx-auto space-y-6 p-4 sm:p-6 lg:p-8 animate-fade-in'>
-      {/* Header compact section without MWPanel banner */}
-      <div className='relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900/40 via-zinc-900/40 to-slate-900/40 p-5 sm:p-6 border border-white/10 shadow-xl backdrop-blur-2xl text-center space-y-1.5'>
-        <h1 className='text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent'>
-          Welcome{stats?.name ? `, ${stats.name}` : ''}
-        </h1>
-        <p className='text-zinc-400 text-xs sm:text-sm max-w-lg mx-auto'>
-          Scan the QR code with WireGuard or download your configuration file to connect.
-        </p>
-      </div>
+    <div className='min-h-screen w-full bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 p-4 sm:p-6 lg:p-8 flex flex-col justify-center items-center'>
+      <div className='max-w-[1400px] w-full mx-auto space-y-6 animate-fade-in'>
+        {/* Header section */}
+        <div className='relative overflow-hidden rounded-3xl bg-white/20 p-6 sm:p-8 border border-white/30 shadow-2xl backdrop-blur-2xl text-center space-y-2'>
+          <h1 className='text-3xl sm:text-4xl font-black tracking-tight text-white drop-shadow-md'>
+            Welcome{stats?.name ? `, ${stats.name}` : ''}
+          </h1>
+          <p className='text-white/90 text-sm sm:text-base max-w-lg mx-auto font-medium'>
+            Scan the QR code with WireGuard or download your configuration file to connect.
+          </p>
+        </div>
 
-      {/* 3 Main Cards side-by-side in 3 columns */}
-      <div className='grid gap-5 md:grid-cols-2 lg:grid-cols-3 items-stretch'>
-        <div className='h-full transform transition-all duration-300 hover:scale-[1.01]'>
-          <PeerQRCodeCard isLoading={qrCodeLoading} qrCode={qrCode} />
+        {/* 3 Main Cards: Statistics first, then QR Code, then Configuration */}
+        <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3 items-stretch'>
+          <div className='h-full transform transition-all duration-300 hover:scale-[1.02]'>
+            {statsCard}
+          </div>
+          <div className='h-full transform transition-all duration-300 hover:scale-[1.02]'>
+            <PeerQRCodeCard isLoading={qrCodeLoading} qrCode={qrCode} />
+          </div>
+          <div className='h-full transform transition-all duration-300 hover:scale-[1.02]'>
+            {configCard}
+          </div>
         </div>
-        <div className='h-full transform transition-all duration-300 hover:scale-[1.01]'>
-          {configCard}
-        </div>
-        <div className='h-full transform transition-all duration-300 hover:scale-[1.01]'>
-          {statsCard}
-        </div>
-      </div>
 
-      {/* Telegram Card below if enabled */}
-      {telegramStatus?.enabled && (
-        <div className='max-w-2xl mx-auto transform transition-all duration-300 hover:scale-[1.01]'>
-          <PeerTelegramCard
-            isLoading={telegramStatusLoading || telegramLinkLoading}
-            shareId={shareId}
-            botStatus={telegramStatus}
-            linkStatus={telegramLink}
-          />
-        </div>
-      )}
+        {/* Telegram Card below if enabled */}
+        {telegramStatus?.enabled && (
+          <div className='max-w-2xl mx-auto transform transition-all duration-300 hover:scale-[1.02]'>
+            <PeerTelegramCard
+              isLoading={telegramStatusLoading || telegramLinkLoading}
+              shareId={shareId}
+              botStatus={telegramStatus}
+              linkStatus={telegramLink}
+            />
+          </div>
+        )}
+      </div>
     </div>
   )
 }
