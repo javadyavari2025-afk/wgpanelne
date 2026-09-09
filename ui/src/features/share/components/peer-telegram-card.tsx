@@ -1,14 +1,6 @@
 'use client'
 
 import { IconBrandTelegram } from '@tabler/icons-react'
-import { BellIcon, UserIcon } from 'lucide-react'
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { PeerTelegramStatus, TelegramStatus } from '@/schema/telegram.ts'
 
@@ -29,18 +21,9 @@ export default function PeerTelegramCard({
     ? `${botStatus.bot_url}?start=${shareId}`
     : undefined
   const linked = Boolean(linkStatus?.linked)
-  const alertsOn = Boolean(linkStatus?.notify_enabled)
-  let alertsLabel = '—'
-  if (linked) {
-    alertsLabel = alertsOn ? 'On' : 'Off'
-  }
-  const botName = botStatus?.bot_username
-    ? `@${botStatus.bot_username.replace(/^@/, '')}`
-    : '—'
-  const account = linkStatus?.username || (linked ? 'Chat linked' : '—')
 
   return (
-    <Card className='bg-slate-900/50 border border-slate-800/80 backdrop-blur-xl px-5 py-4 rounded-2xl shadow-xl flex flex-col md:flex-row items-center justify-between gap-4 text-slate-100'>
+    <div className='bg-slate-900/50 border border-slate-800/80 backdrop-blur-xl px-5 py-4 rounded-2xl shadow-xl flex flex-col md:flex-row items-center justify-between gap-4 text-slate-100 w-full'>
       <div className='flex items-center space-x-3 space-x-reverse w-full md:w-auto'>
         <div className='p-2.5 bg-sky-500/10 text-sky-400 rounded-xl'>
           <IconBrandTelegram className='w-5 h-5' />
@@ -72,6 +55,6 @@ export default function PeerTelegramCard({
           </a>
         )}
       </div>
-    </Card>
+    </div>
   )
 }
