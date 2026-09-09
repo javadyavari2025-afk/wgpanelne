@@ -6,22 +6,12 @@ RUN apk add --no-cache nodejs npm
 WORKDIR /app
 COPY . .
 
-# Build frontend if ui/package.json exists
 WORKDIR /app/ui
 RUN if [ -f "package.json" ]; then npm install && npm run build; fi
 
-# Find and build Go binary from the correct directory
 WORKDIR /app
 RUN go mod download
-# اگر فایل‌های Go در پوشه فرعی هستند، دستور بیلد را به آن پوشه اشاره می‌دهیم
-RUN set -eux; \
-    if [ -d "cmd" ]; then \
-        CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/mwp.linux.amd64 ./cmd; \
-    elif [ -d "api" ]; then \
-        CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/mwp.linux.amd64 ./api; \
-    else \
-        CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /app/mwp.linux.amd64 .; \
-    fi
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o mwp.linux.amd64 .
 
 # --- Stage 2: Final runtime image ---
 FROM alpine:3
@@ -40,7 +30,6 @@ RUN set -eux && \
 WORKDIR /var/www/mwp
 VOLUME /var/www/mwp
 
-# Copy the binary built in stage 1
 COPY --from=builder /app/mwp.linux.amd64 /usr/local/sbin/mwp
 
 RUN set -eux; \
