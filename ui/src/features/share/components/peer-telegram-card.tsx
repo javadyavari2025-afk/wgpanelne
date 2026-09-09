@@ -1,7 +1,7 @@
 'use client'
 
 import { IconBrandTelegram } from '@tabler/icons-react'
-import { BellIcon, UserIcon } from 'lucide-react'
+import { BellIcon, UserIcon, Send } from 'lucide-react'
 import { ColoredBadge } from '@/features/shared-components/status-badge.tsx'
 import {
   Card,
@@ -33,69 +33,76 @@ export default function PeerTelegramCard({
   const alertsOn = Boolean(linkStatus?.notify_enabled)
   let alertsLabel = '—'
   if (linked) {
-    alertsLabel = alertsOn ? 'فعال' : 'غیرفعال'
+    alertsLabel = alertsOn ? 'On' : 'Off'
   }
   const botName = botStatus?.bot_username
     ? `@${botStatus.bot_username.replace(/^@/, '')}`
     : '—'
-  const account = linkStatus?.username || (linked ? 'متصل شده' : '—')
+  const account = linkStatus?.username || (linked ? 'Chat linked' : '—')
 
   return (
-    <Card className='border-slate-800 bg-slate-900/80 backdrop-blur-xl shadow-xl rounded-2xl p-2 flex flex-col justify-between h-full'>
-      <CardHeader className='flex flex-row items-center justify-between pb-2'>
-        <CardTitle className='flex items-center gap-2 text-base font-semibold text-emerald-400'>
-          <IconBrandTelegram className='h-5 w-5' />
-          <span>تلگرام</span>
-        </CardTitle>
+    <Card className='flex h-full flex-col justify-between border-border/60 bg-gradient-to-b from-card/80 to-card shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden'>
+      <CardHeader className='flex flex-row items-center justify-between pb-3 border-b border-border/40'>
+        <div className='flex items-center gap-2.5'>
+          <div className='p-2 rounded-xl bg-sky-500/10 text-sky-500 shadow-inner'>
+            <IconBrandTelegram className='h-5 w-5' />
+          </div>
+          <CardTitle className='text-lg font-bold'>Telegram</CardTitle>
+        </div>
         {!isLoading && (
           <ColoredBadge
             color={linked ? 'green' : 'yellow'}
-            text={linked ? 'متصل' : 'متصل نشده'}
+            text={linked ? 'linked' : 'not linked'}
           />
         )}
       </CardHeader>
 
-      <CardContent className='py-4'>
+      <CardContent className='flex flex-1 flex-col justify-center pt-4'>
         {isLoading ? (
-          <div className='space-y-3'>
-            <Skeleton className='h-4 w-1/2 bg-slate-800' />
-            <Skeleton className='h-4 w-2/3 bg-slate-800' />
-            <Skeleton className='h-4 w-1/3 bg-slate-800' />
+          <div className='space-y-3 py-2'>
+            <Skeleton className='h-5 w-full rounded-md' />
+            <Skeleton className='h-5 w-full rounded-md' />
+            <Skeleton className='h-5 w-full rounded-md' />
           </div>
         ) : (
-          <div className='space-y-3 text-sm'>
-            <div className='flex items-center justify-between py-1 border-b border-slate-800/60'>
-              <span className='text-slate-400 flex items-center gap-2'>ربات</span>
-              <span className='font-medium text-slate-200'>{botName}</span>
+          <div className='space-y-3.5 text-sm'>
+            <div className='flex items-center justify-between p-2.5 rounded-xl bg-zinc-950/5 dark:bg-zinc-900/30 border border-border/40'>
+              <span className='flex items-center gap-2.5 text-muted-foreground font-medium'>
+                <IconBrandTelegram className='h-4 w-4 text-sky-500' />
+                Bot
+              </span>
+              <span className='font-semibold'>{botName}</span>
             </div>
 
-            <div className='flex items-center justify-between py-1 border-b border-slate-800/60'>
-              <span className='text-slate-400 flex items-center gap-2'>
-                <UserIcon className='h-4 w-4 text-sky-400' /> حساب کاربری
+            <div className='flex items-center justify-between p-2.5 rounded-xl bg-zinc-950/5 dark:bg-zinc-900/30 border border-border/40'>
+              <span className='flex items-center gap-2.5 text-muted-foreground font-medium'>
+                <UserIcon className='h-4 w-4 text-sky-500' />
+                Account
               </span>
-              <span className='font-medium text-slate-200'>{account}</span>
+              <span className='font-semibold'>{account}</span>
             </div>
 
-            <div className='flex items-center justify-between py-1'>
-              <span className='text-slate-400 flex items-center gap-2'>
-                <BellIcon className='h-4 w-4 text-amber-400' /> هشدارها
+            <div className='flex items-center justify-between p-2.5 rounded-xl bg-zinc-950/5 dark:bg-zinc-900/30 border border-border/40'>
+              <span className='flex items-center gap-2.5 text-muted-foreground font-medium'>
+                <BellIcon className='h-4 w-4 text-sky-500' />
+                Alerts
               </span>
-              <span className='font-medium text-slate-200'>{alertsLabel}</span>
+              <span className='font-semibold'>{alertsLabel}</span>
             </div>
           </div>
         )}
       </CardContent>
 
       {startURL && (
-        <CardFooter className='pt-0'>
+        <CardFooter className='pt-0 pb-5 px-6'>
           <a
             href={startURL}
             target='_blank'
             rel='noreferrer'
-            className='bg-[#2AABEE] hover:bg-[#229ED9] inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-sky-900/20 transition-colors'
+            className='bg-[#2AABEE] hover:bg-[#229ED9] inline-flex w-full items-center justify-center gap-2.5 rounded-xl px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-sky-500/25 hover:shadow-sky-500/40 transition-all duration-300'
           >
-            <IconBrandTelegram className='h-5 w-5' />
-            {linked ? 'مدیریت در ربات تلگرام' : 'اتصال به ربات تلگرام'}
+            <Send className='h-4 w-4' />
+            {linked ? 'Open Telegram Bot' : 'Connect to Telegram Bot'}
           </a>
         </CardFooter>
       )}

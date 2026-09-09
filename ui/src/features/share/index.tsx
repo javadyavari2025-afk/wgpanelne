@@ -55,53 +55,56 @@ export default function PeerShare() {
   }
 
   return (
-    <div className='min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-4 sm:p-6'>
-      <div className='w-full max-w-4xl mx-auto space-y-6'>
+    <div className='max-w-7xl mx-auto space-y-8 p-4 sm:p-6 lg:p-8 animate-fade-in'>
+      <div className='relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600/10 via-indigo-600/10 to-purple-600/10 p-6 sm:p-8 border border-border/50 shadow-sm backdrop-blur-xl'>
+        <div className='absolute -right-10 -top-10 h-40 w-40 rounded-full bg-blue-500/10 blur-3xl pointer-events-none' />
+        <div className='absolute -left-10 -bottom-10 h-40 w-40 rounded-full bg-purple-500/10 blur-3xl pointer-events-none' />
         
-        {/* هدر زیبا و مینیمال */}
-        <div className='text-center space-y-2 py-2'>
-          <div className='inline-flex items-center justify-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium shadow-sm'>
-            <IconRoute className='h-4 w-4' />
-            <span>Secure WireGuard Connection</span>
+        <div className='relative z-10 space-y-3 text-center'>
+          <div className='inline-flex items-center justify-center gap-2.5 px-4 py-1.5 rounded-full bg-primary/10 text-primary border border-primary/20 shadow-inner mb-2'>
+            <IconRoute className='h-5 w-5 animate-pulse' />
+            <span className='font-bold tracking-wide text-sm'>MWPanel Secure Share</span>
           </div>
-          <h1 className='text-2xl sm:text-3xl font-extrabold tracking-tight text-white'>
-            {stats?.name ? `خوش آمدید، ${stats.name}` : 'به پنل اتصال خوش آمدید'}
+          <h1 className='text-3xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-muted-foreground bg-clip-text text-transparent'>
+            Welcome{stats?.name ? `, ${stats.name}` : ''}
           </h1>
-          <p className='text-slate-400 text-xs sm:text-sm max-w-md mx-auto'>
-            برای اتصال، QR کد زیر را اسکن کنید یا فایل کانفیگ را دانلود نمایید.
+          <p className='text-muted-foreground text-sm sm:text-base max-w-xl mx-auto'>
+            Scan the QR code with your WireGuard client or download your custom configuration file to connect instantly.
           </p>
         </div>
+      </div>
 
-        {/* ساختار کارت‌ها بر اساس فعال بودن تلگرام */}
-        {telegramStatus?.enabled ? (
-          <div className='grid gap-6 md:grid-cols-2 items-start'>
+      {telegramStatus?.enabled ? (
+        <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-2'>
+          <div className='transform transition-all duration-300 hover:translate-y-[-2px]'>
             <PeerQRCodeCard isLoading={qrCodeLoading} qrCode={qrCode} />
+          </div>
+          <div className='transform transition-all duration-300 hover:translate-y-[-2px]'>
             {configCard}
+          </div>
+          <div className='transform transition-all duration-300 hover:translate-y-[-2px]'>
             <PeerTelegramCard
               isLoading={telegramStatusLoading || telegramLinkLoading}
               shareId={shareId}
               botStatus={telegramStatus}
               linkStatus={telegramLink}
             />
+          </div>
+          <div className='transform transition-all duration-300 hover:translate-y-[-2px]'>
             {statsCard}
           </div>
-        ) : (
-          <div className='grid items-start gap-6 md:grid-cols-2'>
-            <div className='w-full'>
-              <PeerQRCodeCard isLoading={qrCodeLoading} qrCode={qrCode} />
-            </div>
-            <div className='space-y-6 w-full'>
-              {configCard}
-              {statsCard}
-            </div>
-          </div>
-        )}
-
-        {/* فوتر ساده */}
-        <div className='text-center text-xs text-slate-500 pt-4 border-t border-slate-900'>
-          Powered by MWPanel &bull; Fast & Secure
         </div>
-      </div>
+      ) : (
+        <div className='grid items-start gap-6 md:grid-cols-2'>
+          <div className='transform transition-all duration-300 hover:translate-y-[-2px]'>
+            <PeerQRCodeCard isLoading={qrCodeLoading} qrCode={qrCode} />
+          </div>
+          <div className='space-y-6 transform transition-all duration-300 hover:translate-y-[-2px]'>
+            {configCard}
+            {statsCard}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
